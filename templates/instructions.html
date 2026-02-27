@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Mission Briefing | Flight Manual</title>
+    <style>
+        body { 
+            background: #050508; color: white; font-family: 'Segoe UI', sans-serif;
+            display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0;
+        }
+        .container {
+            max-width: 600px; padding: 40px; background: rgba(10, 15, 30, 0.9);
+            border: 1px solid #00d2ff; border-radius: 20px; box-shadow: 0 0 30px rgba(0, 210, 255, 0.2);
+        }
+        h1 { color: #00d2ff; text-transform: uppercase; letter-spacing: 3px; }
+        .key-binds { background: rgba(255,255,255,0.05); padding: 20px; border-radius: 10px; margin: 20px 0; }
+        kbd {
+            background: #eee; color: #333; padding: 2px 8px; border-radius: 4px;
+            font-family: monospace; font-weight: bold;
+        }
+        .btn {
+            display: inline-block; background: #00d2ff; color: #000; padding: 15px 30px;
+            text-decoration: none; border-radius: 30px; font-weight: bold; transition: 0.3s;
+        }
+        .btn:hover { transform: scale(1.05); background: #00ff88; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Mission Briefing</h1>
+        <p>Pilot, you are tasked with exploring the gravitational anomalies of our Solar System. Your objective is to collect fuel and escape each planet's gravity well.</p>
+        
+        <div class="key-binds">
+            <h3>Flight Controls:</h3>
+            <ul>
+                <li><kbd>←</kbd> <kbd>→</kbd> : Move Astronaut</li>
+                <li><kbd>Space</kbd> : Jump (Thrusters)</li>
+            </ul>
+            <h3>Equipment:</h3>
+            <p>🧲 <strong>Magnet:</strong> Automatically pulls nearby fuel canisters toward you for a limited time.</p>
+        </div>
+
+        <h3>The Physics:</h3>
+        <p>Remember: Heavy planets like <strong>Jupiter</strong> require more thrust to jump, while the <strong>Moon</strong> will allow you to glide through the air effortlessly.</p>
+
+        <a href="/mission" class="btn">START EXPEDITION</a>
+    </div>
+</body>
+</html>
