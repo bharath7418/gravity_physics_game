@@ -52,11 +52,66 @@
             display: none; flex-direction: column; align-items: center; justify-content: center; text-align: center;
         }
         @media (orientation: portrait) { #rotate-warning { display: flex; } }
-        @media (max-width: 900px) { 
+        /* @media (max-width: 900px) { 
             #mobileControls { display: flex; } 
-            .value { font-size: 20px; }
-            .progress-box { width: 80px; }
-        }
+            .value { font-size: 10px; }
+            .progress-box { width: 60px; }
+        } */
+
+        /* --- MOBILE OPTIMIZATION --- */
+@media (max-width: 900px) { 
+    /* Show controls and space them for thumbs */
+    #mobileControls { 
+        display: flex; 
+        justify-content: space-between; 
+        bottom: 40px; /* Lifted slightly for gesture navigation bars */
+        padding: 0 40px; 
+    } 
+
+    /* Group Left/Right on the left side */
+    #mobileControls > div:first-child {
+        display: flex;
+        gap: 20px;
+    }
+
+    /* Make buttons larger for easier tapping */
+    .touch-btn {
+        width: 85px;
+        height: 85px;
+        font-size: 35px;
+        background: rgba(255, 255, 255, 0.08);
+        border-width: 3px;
+    }
+
+    /* Adjust Navbar for small screens */
+    #ui {
+        height: 75px;
+        padding: 0 10px;
+        padding-top: env(safe-area-inset-top); /* Supports phone notches */
+    }
+
+    /* Keep values readable (10px is too small, 14px is better) */
+    .value { 
+        font-size: 14px; 
+    }
+
+    .label {
+        font-size: 7px;
+    }
+
+    /* Shrink the fuel bar to save horizontal space */
+    .progress-box { 
+        width: 65px; 
+        height: 6px;
+    }
+
+    /* Center the Sector name more effectively */
+    #planetName {
+        font-size: 12px;
+    }
+}
+
+
 
         /* --- MODALS --- */
         #message, #gameOver, #infoPanel, #summaryPanel { 
