@@ -361,7 +361,7 @@ function update() {
 
     magnets.forEach((mag, i) => {
         mag.y += mag.speed;
-        if(Math.hypot(player.x - mag.x, (player.y-20) - mag.y) < 40) { magnets.splice(i, 1); player.magnetActive = true; player.magnetTimer = 600; playSound('magnet'); updateUI(); }
+        if(Math.hypot(player.x - mag.x, (player.y-20) - mag.y) < 40) { magnets.splice(i, 1); player.magnetActive = true; player.magnetTimer = 400; playSound('magnet'); updateUI(); }
     });
 }
 
@@ -412,7 +412,23 @@ function showSummary() {
 
 function nextLevel() {
     planetIndex = (planetIndex + 1) % planets.length;
-    rocket.fuel = 0; launchY = 0; player.visible = true; player.x = 50;
+    
+    // Reset Rocket & Launch physics
+    rocket.fuel = 0; 
+    launchY = 0; 
+    shake = 0;
+
+    // Reset Player State
+    player.visible = true; 
+    player.x = 50;
+    player.vy = 0;
+    player.onGround = true;
+
+    // --- FIX: Reset Magnet Status ---
+    player.magnetActive = false;
+    player.magnetTimer = 0;
+
+    // UI and Level Loading
     document.getElementById("message").style.display = "none";
     loadLevel();
 }
