@@ -2,9 +2,10 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Space Physics | Detailed Summary Edition</title>
     <style>
-        body { margin: 0; overflow: hidden; font-family: 'Segoe UI', sans-serif; background: #050508; color: white; user-select: none; }
+        body { margin: 0; overflow: hidden; font-family: 'Segoe UI', sans-serif; background: #050508; color: white; user-select: none; touch-action: none; }
         
         /* --- NAVBAR STYLES --- */
         #ui { 
@@ -30,6 +31,33 @@
         .progress-box { width: 150px; height: 8px; background: rgba(255,255,255,0.05); border-radius: 10px; overflow: hidden; }
         #fuelBar { width: 0%; height: 100%; background: linear-gradient(90deg, #00d2ff, #00ff88); transition: width 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
         
+        /* --- MOBILE CONTROLS --- */
+        #mobileControls {
+            position: absolute; bottom: 20px; left: 0; width: 100%;
+            display: none; justify-content: space-between; padding: 0 30px;
+            box-sizing: border-box; z-index: 200; pointer-events: none;
+        }
+        .touch-btn {
+            width: 75px; height: 75px; background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(0, 210, 255, 0.5); border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 30px; pointer-events: auto; touch-action: none;
+        }
+        .touch-btn:active { background: rgba(0, 210, 255, 0.4); transform: scale(0.9); }
+
+        /* Orientation Warning */
+        #rotate-warning {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #050508; color: white; z-index: 5000;
+            display: none; flex-direction: column; align-items: center; justify-content: center; text-align: center;
+        }
+        @media (orientation: portrait) { #rotate-warning { display: flex; } }
+        @media (max-width: 900px) { 
+            #mobileControls { display: flex; } 
+            .value { font-size: 20px; }
+            .progress-box { width: 80px; }
+        }
+
         /* --- MODALS --- */
         #message, #gameOver, #infoPanel, #summaryPanel { 
             position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); 
@@ -52,6 +80,11 @@
     </style>
 </head>
 <body>
+
+<div id="rotate-warning">
+    <h1>🚀 Rotate Device</h1>
+    <p>Please use Landscape mode to play.</p>
+</div>
 
 <div id="ui">
     <div class="ui-group">
@@ -80,6 +113,14 @@
         <span class="label">Fuel</span>
         <div class="progress-box"><div id="fuelBar"></div></div>
     </div>
+</div>
+
+<div id="mobileControls">
+    <div style="display: flex; gap: 20px;">
+        <div class="touch-btn" id="leftBtn">⬅️</div>
+        <div class="touch-btn" id="rightBtn">➡️</div>
+    </div>
+    <div class="touch-btn" id="jumpBtn" style="border-color: #00ff88;">🚀</div>
 </div>
 
 <div id="infoPanel" style="display:block;">
@@ -120,8 +161,9 @@
 // --- AUDIO ENGINE ---
 let audioCtx;
 function initAudio() { if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
-window.addEventListener('click', initAudio);
+window.addEventListener('mousedown', initAudio);
 window.addEventListener('keydown', initAudio);
+window.addEventListener('touchstart', initAudio);
 
 function playSound(type) {
     if (!audioCtx) return;
@@ -166,11 +208,14 @@ function playSound(type) {
 const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d");
 
-function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+function resize() { 
+    canvas.width = window.innerWidth; 
+    canvas.height = window.innerHeight; 
+}
 window.addEventListener('resize', resize);
 resize();
 
-const groundY = canvas.height - 100;
+const groundY = () => canvas.height - 100;
 const planets = [
     {name:"Earth 🌍", g:0.6, realVal:"9.8", speedVal:"Normal", jump:-16, speed: 8, sky:["#0a1a3a", "#1e3c72", "#2a5298"], ground:"#1a5e3a", det:"#2ecc71", atm:"rgba(0, 210, 255, 0.2)", fColor:"#2ecc71", atmoType:"Nitrogen", o2:"21%", info:"Gravity is 9.8 m/s². The cradle of humanity."},
     {name:"Moon 🌕", g:0.1, realVal:"1.6", speedVal:"Very Fast", jump:-10, speed: 10, sky:["#000000", "#050505", "#111111"], ground:"#333333", det:"#777777", atm:"rgba(255, 255, 255, 0.05)", fColor:"#95a5a6", atmoType:"None", o2:"0%", info:"Gravity is 1.6 m/s². Low gravity allows for huge jumps!"},
@@ -189,10 +234,20 @@ let launchY = 0;
 let shake = 0;
 let stars = Array.from({length: 100}, () => ({x: Math.random(), y: Math.random(), size: Math.random() * 2}));
 
-let player = { x:100, y:groundY, vy:0, onGround:true, lives: 3, magnetActive: false, magnetTimer: 0, facing: 1, walkFrame: 0, visible: true };
-let rocket = { x:canvas.width-250, y:groundY-140, fuel:0 };
+let player = { x:100, y:0, vy:0, onGround:true, lives: 3, magnetActive: false, magnetTimer: 0, facing: 1, walkFrame: 0, visible: true };
+let rocket = { x:canvas.width-250, y:0, fuel:0 };
 let fuelCans = []; let meteors = []; let magnets = []; let collected = 0;
 const keys = {};
+
+// Mobile Control Logic
+const setupTouch = (id, key) => {
+    const el = document.getElementById(id);
+    el.addEventListener('touchstart', (e) => { e.preventDefault(); keys[key] = true; });
+    el.addEventListener('touchend', (e) => { e.preventDefault(); keys[key] = false; });
+};
+setupTouch('leftBtn', 'ArrowLeft');
+setupTouch('rightBtn', 'ArrowRight');
+setupTouch('jumpBtn', 'Space');
 
 let startTime;
 let timeInterval;
@@ -222,20 +277,17 @@ function formatTime(ms) {
 function updateUI() {
     const p = planets[planetIndex];
     document.getElementById("planetName").innerText = p.name;
-    // Update Gravity Value
     document.getElementById("gravityVal").innerText = p.realVal;
-    
     document.getElementById("fuelBar").style.width = (rocket.fuel / 3 * 100) + "%";
     document.getElementById("magnetStatus").style.display = player.magnetActive ? "block" : "none";
     let heartStr = "";
     for(let i=0; i<player.lives; i++) heartStr += "❤️";
     document.getElementById("hearts").innerText = heartStr || "NONE";
-    
 }
 
 function spawnFuel() {
     let xPos = 100 + Math.random() * (canvas.width - 200);
-    let yPos = groundY - 50 - Math.random() * 300;
+    let yPos = groundY() - 50 - Math.random() * 300;
     fuelCans.push({ x: xPos, y: yPos, pulse: 0 }); 
 }
 
@@ -247,11 +299,13 @@ function loadLevel() {
     document.getElementById("infoTitle").innerText = `Welcome to ${p.name}`;
     document.getElementById("infoText").innerText = p.info;
     document.getElementById("infoPanel").style.display = "block";
-    document.getElementById("infoPanel").style.zIndex = "100";
     
     fuelCans = []; meteors = []; magnets = [];
     for(let i=0; i<3; i++) spawnFuel();
     spawnMagnet();
+    rocket.x = canvas.width - (canvas.width < 800 ? 150 : 250);
+    rocket.y = groundY() - 140;
+    player.y = groundY();
     updateUI();
 }
 
@@ -275,12 +329,12 @@ function drawEnvironment() {
     ctx.fillStyle = "white";
     stars.forEach(s => { ctx.globalAlpha = 0.5 + Math.sin(Date.now()/1000 + s.x)*0.5; ctx.fillRect(s.x * canvas.width, s.y * canvas.height, s.size, s.size); });
     ctx.globalAlpha = 1;
-    let glow = ctx.createLinearGradient(0, groundY - 300, 0, groundY);
+    let glow = ctx.createLinearGradient(0, groundY() - 300, 0, groundY());
     glow.addColorStop(0, "transparent"); glow.addColorStop(1, p.atm);
-    ctx.fillStyle = glow; ctx.fillRect(0, groundY - 300, canvas.width, 300);
-    ctx.fillStyle = p.ground; ctx.fillRect(0, groundY, canvas.width, 100);
+    ctx.fillStyle = glow; ctx.fillRect(0, groundY() - 300, canvas.width, 300);
+    ctx.fillStyle = p.ground; ctx.fillRect(0, groundY(), canvas.width, 100);
     ctx.fillStyle = p.det; ctx.globalAlpha = 0.3;
-    for(let i=0; i<20; i++) { ctx.beginPath(); ctx.ellipse((i * 137) % canvas.width, groundY + 20 + (i%30), 40, 10, 0, 0, Math.PI*2); ctx.fill(); }
+    for(let i=0; i<20; i++) { ctx.beginPath(); ctx.ellipse((i * 137) % canvas.width, groundY() + 20 + (i%30), 40, 10, 0, 0, Math.PI*2); ctx.fill(); }
     ctx.globalAlpha = 1;
 }
 
@@ -328,7 +382,7 @@ function update() {
     if(keys["ArrowLeft"]) { player.x -= p.speed; player.facing = -1; isMoving = true; }
     if(keys["Space"] && player.onGround) { player.vy = p.jump; player.onGround = false; }
     player.vy += p.g; player.y += player.vy;
-    if(player.y >= groundY) { player.y = groundY; player.vy = 0; player.onGround = true; }
+    if(player.y >= groundY()) { player.y = groundY(); player.vy = 0; player.onGround = true; }
     player.x = Math.max(20, Math.min(canvas.width - 20, player.x));
     if(isMoving && player.onGround) player.walkFrame += 0.2;
     if(player.magnetActive) { player.magnetTimer--; if(player.magnetTimer <= 0) player.magnetActive = false; }
