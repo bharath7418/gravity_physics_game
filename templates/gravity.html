@@ -202,11 +202,17 @@ function resize() {
 }
 window.addEventListener('resize', resize);
 
+// --- PLANET DATA ---
 const planets = [
     {name:"Earth 🌍", g:0.6, realVal:"9.8", speedVal:"Normal", jump:-16, speed: 8, sky:["#0a1a3a", "#1e3c72", "#2a5298"], ground:"#1a5e3a", det:"#2ecc71", atm:"rgba(0, 210, 255, 0.2)", fColor:"#2ecc71", atmoType:"Nitrogen", o2:"21%", info:"Gravity is 9.8 m/s². The cradle of humanity."},
     {name:"Moon 🌕", g:0.1, realVal:"1.6", speedVal:"Very Fast", jump:-10, speed: 10, sky:["#000000", "#050505", "#111111"], ground:"#333333", det:"#777777", atm:"rgba(255, 255, 255, 0.05)", fColor:"#95a5a6", atmoType:"None", o2:"0%", info:"Gravity is 1.6 m/s². Low gravity allows for huge jumps!"},
     {name:"Mars 🔴", g:0.25, realVal:"3.7", speedVal:"Fast", jump:-13, speed: 9, sky:["#2c0a0a", "#4d0505", "#8b0000"], ground:"#6d2108", det:"#e67e22", atm:"rgba(255, 100, 0, 0.15)", fColor:"#e67e22", atmoType:"Thin CO2", o2:"<0.1%", info:"Gravity is 3.7 m/s². The red planet is dusty and cold."},
-    {name:"Jupiter 🟠", g:1.5, realVal:"24.7", speedVal:"Very Slow", jump:-30, speed: 5, sky:["#1a0f00", "#432818", "#5d4037"], ground:"#5e3a24", det:"#f39c12", atm:"rgba(243, 156, 18, 0.1)", fColor:"#f39c12", atmoType:"Thick H/He", o2:"0%", info:"Gravity is 24.7 m/s². Massive pressure makes movement difficult."}
+    {name:"Mercury 🌑", g:0.25, realVal:"3.7", speedVal:"Fast", jump:-13, speed: 9, sky:["#111111", "#222222", "#333333"], ground:"#4a4a4a", det:"#888888", atm:"rgba(100, 100, 100, 0.1)", fColor:"#bdc3c7", atmoType:"Trace", o2:"0%", info:"Gravity is 3.7 m/s². Scorched by the Sun."},
+    {name:"Jupiter 🟠", g:1.5, realVal:"24.7", speedVal:"Very Slow", jump:-30, speed: 5, sky:["#1a0f00", "#432818", "#5d4037"], ground:"#5e3a24", det:"#f39c12", atm:"rgba(243, 156, 18, 0.1)", fColor:"#f39c12", atmoType:"Thick H/He", o2:"0%", info:"Gravity is 24.7 m/s². Massive pressure makes movement difficult."},
+    {name:"Saturn 🪐", g:0.65, realVal:"10.4", speedVal:"Slow", jump:-16, speed: 7, sky:["#251b00", "#5d4037", "#a08e7a"], ground:"#7b6140", det:"#f1c40f", atm:"rgba(241, 196, 15, 0.1)", fColor:"#f1c40f", atmoType:"Thick H/He", o2:"0%", info:"Gravity is 10.4 m/s². Famous for its rings."},
+    {name:"Uranus 🧊", g:0.55, realVal:"8.7", speedVal:"Medium", jump:-15, speed: 7, sky:["#002030", "#004060", "#005f80"], ground:"#004060", det:"#a3e4d7", atm:"rgba(163, 228, 215, 0.1)", fColor:"#a3e4d7", atmoType:"Thick H/He/CH4", o2:"0%", info:"Gravity is 8.7 m/s². An icy, blue giant."},
+    {name:"Neptune 🔵", g:0.7, realVal:"11.15", speedVal:"Slow", jump:-18, speed: 6, sky:["#000022", "#000044", "#000066"], ground:"#002244", det:"#0077ff", atm:"rgba(0, 100, 255, 0.1)", fColor:"#0077ff", atmoType:"Thick H/He", o2:"0%", info:"Gravity is 11.15 m/s². The icy giant is freezing cold."},
+    {name:"Venus 🟡", g:0.55, realVal:"8.87", speedVal:"Medium", jump:-15, speed: 7, sky:["#3a1a00", "#723c1e", "#98522a"], ground:"#5e3a24", det:"#f39c12", atm:"rgba(255, 150, 0, 0.2)", fColor:"#f39c12", atmoType:"Very Thick CO2", o2:"0%", info:"Gravity is 8.87 m/s². A hellish landscape with high pressure."}
 ];
 
 let planetIndex = 0;
