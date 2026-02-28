@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Space Physics | Detailed Summary Edition</title>
+    <title>Space Physics | Mobile Optimized Edition</title>
     <style>
         body { margin: 0; overflow: hidden; font-family: 'Segoe UI', sans-serif; background: #050508; color: white; user-select: none; touch-action: none; }
         
@@ -11,203 +11,129 @@
         #ui { 
             position: absolute; top: 0; left: 0; width: 100%; height: 60px;
             display: flex; align-items: center; justify-content: space-around;
-            padding: 0 20px;
+            padding: 0 10px;
             background: rgba(10, 15, 30, 0.8); backdrop-filter: blur(12px); 
             border-bottom: 1px solid rgba(0, 210, 255, 0.3);
             z-index: 10; box-shadow: 0 4px 15px rgba(0,0,0,0.5);
             box-sizing: border-box;
         }
         
-        .ui-group { display: flex; align-items: center; gap: 15px; }
-        .label { font-size: 10px; text-transform: uppercase; letter-spacing: 2px; color: #00d2ff; opacity: 0.8; }
-        .unit { font-size: 10px; color: #00d2ff; margin-left: -10px; text-transform: lowercase; }
-        .value { font-size: 30px; font-weight: 800; font-variant-numeric: tabular-nums; }
+        .ui-group { display: flex; align-items: center; gap: 10px; }
+        .label { font-size: 9px; text-transform: uppercase; letter-spacing: 1px; color: #00d2ff; opacity: 0.8; }
+        .value { font-size: 16px; font-weight: 800; font-variant-numeric: tabular-nums; }
         
         #magnetStatus { color: #ff4757; font-weight: bold; display: none; animation: pulse 1s infinite; text-shadow: 0 0 10px #ff4757; }
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
         
-        #hearts { font-size: 20px; filter: drop-shadow(0 0 5px rgba(255, 71, 87, 0.5)); }
+        #hearts { font-size: 16px; filter: drop-shadow(0 0 5px rgba(255, 71, 87, 0.5)); }
         
-        .progress-box { width: 150px; height: 8px; background: rgba(255,255,255,0.05); border-radius: 10px; overflow: hidden; }
+        .progress-box { width: 80px; height: 8px; background: rgba(255,255,255,0.05); border-radius: 10px; overflow: hidden; }
         #fuelBar { width: 0%; height: 100%; background: linear-gradient(90deg, #00d2ff, #00ff88); transition: width 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
         
-        /* --- MOBILE CONTROLS --- */
-        #mobileControls {
-            position: absolute; bottom: 20px; left: 0; width: 100%;
-            display: none; justify-content: space-between; padding: 0 30px;
-            box-sizing: border-box; z-index: 200; pointer-events: none;
-        }
-        .touch-btn {
-            width: 75px; height: 75px; background: rgba(255, 255, 255, 0.1);
-            border: 2px solid rgba(0, 210, 255, 0.5); border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 30px; pointer-events: auto; touch-action: none;
-        }
-        .touch-btn:active { background: rgba(0, 210, 255, 0.4); transform: scale(0.9); }
-
-        /* Orientation Warning */
-        #rotate-warning {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: #050508; color: white; z-index: 5000;
-            display: none; flex-direction: column; align-items: center; justify-content: center; text-align: center;
-        }
-        @media (orientation: portrait) { #rotate-warning { display: flex; } }
-        /* @media (max-width: 900px) { 
-            #mobileControls { display: flex; } 
-            .value { font-size: 10px; }
-            .progress-box { width: 60px; }
-        } */
-
-        /* --- MOBILE OPTIMIZATION --- */
-@media (max-width: 900px) { 
-    /* Show controls and space them for thumbs */
-    #mobileControls { 
-        display: flex; 
-        justify-content: space-between; 
-        bottom: 40px; /* Lifted slightly for gesture navigation bars */
-        padding: 0 40px; 
-    } 
-
-    /* Group Left/Right on the left side */
-    #mobileControls > div:first-child {
-        display: flex;
-        gap: 20px;
-    }
-
-    /* Make buttons larger for easier tapping */
-    .touch-btn {
-        width: 85px;
-        height: 85px;
-        font-size: 35px;
-        background: rgba(255, 255, 255, 0.08);
-        border-width: 3px;
-    }
-
-    /* Adjust Navbar for small screens */
-    #ui {
-        height: 75px;
-        padding: 0 10px;
-        padding-top: env(safe-area-inset-top); /* Supports phone notches */
-    }
-
-    /* Keep values readable (10px is too small, 14px is better) */
-    .value { 
-        font-size: 14px; 
-    }
-
-    .label {
-        font-size: 7px;
-    }
-
-    /* Shrink the fuel bar to save horizontal space */
-    .progress-box { 
-        width: 65px; 
-        height: 6px;
-    }
-
-    /* Center the Sector name more effectively */
-    #planetName {
-        font-size: 12px;
-    }
-}
-
-
-
         /* --- MODALS --- */
         #message, #gameOver, #infoPanel, #summaryPanel { 
             position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); 
-            background: rgba(2, 5, 15, 0.95); padding: 40px; border-radius: 40px; 
+            background: rgba(2, 5, 15, 0.95); padding: 30px; border-radius: 30px; 
             text-align: center; border: 1px solid #00d2ff; display: none; z-index: 100;
             box-shadow: 0 0 100px rgba(0, 210, 255, 0.2);
+            width: 85%; max-width: 450px; box-sizing: border-box;
         }
+        
         button { 
-            background: #fff; border: none; padding: 18px 45px; font-weight: 900; 
-            border-radius: 40px; cursor: pointer; margin-top: 25px; color: #000; 
+            background: #fff; border: none; padding: 15px 35px; font-weight: 900; 
+            border-radius: 40px; cursor: pointer; margin-top: 20px; color: #000; 
             text-transform: uppercase; transition: 0.3s;
         }
         button:hover { transform: scale(1.05); background: #00d2ff; color: white; }
         
-        #summaryPanel table { margin-top: 20px; border-collapse: collapse; width: 100%; font-size: 12px; }
-        #summaryPanel th { text-align: left; color: #00d2ff; padding: 10px; border-bottom: 2px solid #00d2ff; }
-        #summaryPanel td { padding: 8px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        /* Summary Table Styles */
+        #summaryPanel { max-height: 80vh; overflow-y: auto; }
+        #summaryPanel table { margin-top: 20px; border-collapse: collapse; width: 100%; font-size: 10px; }
+        #summaryPanel th { text-align: left; color: #00d2ff; padding: 8px; border-bottom: 2px solid #00d2ff; }
+        #summaryPanel td { padding: 6px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.1); }
         
+        /* --- MOBILE CONTROLS --- */
+        .touch-controls {
+            position: absolute; bottom: 30px; left: 0; width: 100%;
+            display: flex; justify-content: space-between; padding: 0 30px;
+            box-sizing: border-box; z-index: 50; pointer-events: none;
+        }
+        .t-btn {
+            width: 65px; height: 65px; background: rgba(255,255,255,0.1);
+            border: 2px solid rgba(0, 210, 255, 0.4); border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            color: white; font-size: 24px; pointer-events: auto;
+            -webkit-tap-highlight-color: transparent; backdrop-filter: blur(4px);
+        }
+        .t-btn:active { background: rgba(0, 210, 255, 0.4); transform: scale(0.9); }
+
         canvas { display: block; }
+
+        @media (min-width: 800px) {
+            .touch-controls { display: none; }
+            .value { font-size: 20px; }
+            .label { font-size: 10px; }
+            .progress-box { width: 150px; }
+        }
     </style>
 </head>
 <body>
 
-<div id="rotate-warning">
-    <h1>🚀 Rotate Device</h1>
-    <p>Please use Landscape mode to play.</p>
-</div>
-
 <div id="ui">
     <div class="ui-group">
-        <span class="label">Integrity</span>
         <span id="hearts" class="value">❤️❤️❤️</span>
-        <span id="magnetStatus">🧲 MAGNET</span>
+        <span id="magnetStatus">🧲</span>
     </div>
     
     <div class="ui-group">
-        <span class="label">Sector</span>
         <span id="planetName" class="value">Earth 🌍</span>
     </div>
 
     <div class="ui-group">
-        <span class="label">Gravity</span>
-        <span id="gravityVal" class="value" style="color: greenyellow; font-size: 50px;">9.8</span>
-        <span class="unit">m/s²</span>
-    </div>
-
-    <div class="ui-group">
-        <span class="label">Time</span>
         <span id="timer" class="value">00:00</span>
     </div>
 
     <div class="ui-group">
-        <span class="label">Fuel</span>
         <div class="progress-box"><div id="fuelBar"></div></div>
     </div>
 </div>
 
-<div id="mobileControls">
-    <div style="display: flex; gap: 20px;">
-        <div class="touch-btn" id="leftBtn">⬅️</div>
-        <div class="touch-btn" id="rightBtn">➡️</div>
+<div class="touch-controls">
+    <div style="display:flex; gap: 15px;">
+        <div class="t-btn" id="btnLeft">⬅️</div>
+        <div class="t-btn" id="btnRight">➡️</div>
     </div>
-    <div class="touch-btn" id="jumpBtn" style="border-color: #00ff88;">🚀</div>
+    <div class="t-btn" id="btnJump">🚀</div>
 </div>
 
 <div id="infoPanel" style="display:block;">
-    <h1 id="infoTitle" style="font-size: 32px; margin:0;">Welcome to Sector 1</h1>
-    <p id="infoText" style="opacity: 0.7; max-width:400px;">Collect 3 fuel to reach orbit. Watch out for debris!</p>
+    <h1 id="infoTitle" style="font-size: 28px; margin:0;">Welcome to Sector 1</h1>
+    <p id="infoText" style="opacity: 0.7; font-size: 14px;">Collect 3 fuel to reach orbit. Watch out for debris!</p>
     <button onclick="closeInfo()">Begin Mission</button>
 </div>
 
 <div id="message">
-    <h1 style="font-size: 40px; margin:0;">ORBIT REACHED</h1>
+    <h1 style="font-size: 30px; margin:0;">ORBIT REACHED</h1>
     <button onclick="nextLevel()">Engage Warp Drive</button>
 </div>
 
 <div id="summaryPanel">
-    <h1 style="color:#00ff88; font-size: 36px; margin:0;">JOURNEY COMPLETE</h1>
+    <h1 style="color:#00ff88; font-size: 28px; margin:0;">JOURNEY COMPLETE</h1>
     <p style="opacity: 0.7;">Final Expedition Summary:</p>
     <table id="summaryTable">
         <tr>
             <th>Planet</th>
             <th>Time</th>
             <th>Gravity</th>
-            <th>Speed</th>
-            <th>Atmosphere</th>
-            <th>Oxygen Level</th>
+            <th>Atmo</th>
         </tr>
     </table>
-    <button onclick="location.reload()">Restart Journey</button>
+    <button onclick="location.reload()">Restart</button>
 </div>
 
 <div id="gameOver">
-    <h1 style="color:#ff4757; font-size: 40px; margin:0;">MISSION LOST</h1>
-    <button onclick="location.reload()" style="background:#ff4757; color: white;">Restart Expedition</button>
+    <h1 style="color:#ff4757; font-size: 32px; margin:0;">MISSION LOST</h1>
+    <button onclick="location.reload()" style="background:#ff4757; color: white;">Restart</button>
 </div>
 
 <canvas id="game"></canvas>
@@ -216,9 +142,8 @@
 // --- AUDIO ENGINE ---
 let audioCtx;
 function initAudio() { if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
-window.addEventListener('mousedown', initAudio);
-window.addEventListener('keydown', initAudio);
 window.addEventListener('touchstart', initAudio);
+window.addEventListener('click', initAudio);
 
 function playSound(type) {
     if (!audioCtx) return;
@@ -262,169 +187,132 @@ function playSound(type) {
 // --- GAME LOGIC ---
 const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d");
+let groundY;
 
 function resize() { 
     canvas.width = window.innerWidth; 
-    canvas.height = window.innerHeight; 
+    canvas.height = window.innerHeight;
+    groundY = canvas.height - 100;
+    rocket.x = canvas.width - (canvas.width < 600 ? 120 : 250);
+    rocket.y = groundY - 140;
 }
 window.addEventListener('resize', resize);
-resize();
 
-const groundY = () => canvas.height - 100;
 const planets = [
     {name:"Earth 🌍", g:0.6, realVal:"9.8", speedVal:"Normal", jump:-16, speed: 8, sky:["#0a1a3a", "#1e3c72", "#2a5298"], ground:"#1a5e3a", det:"#2ecc71", atm:"rgba(0, 210, 255, 0.2)", fColor:"#2ecc71", atmoType:"Nitrogen", o2:"21%", info:"Gravity is 9.8 m/s². The cradle of humanity."},
     {name:"Moon 🌕", g:0.1, realVal:"1.6", speedVal:"Very Fast", jump:-10, speed: 10, sky:["#000000", "#050505", "#111111"], ground:"#333333", det:"#777777", atm:"rgba(255, 255, 255, 0.05)", fColor:"#95a5a6", atmoType:"None", o2:"0%", info:"Gravity is 1.6 m/s². Low gravity allows for huge jumps!"},
     {name:"Mars 🔴", g:0.25, realVal:"3.7", speedVal:"Fast", jump:-13, speed: 9, sky:["#2c0a0a", "#4d0505", "#8b0000"], ground:"#6d2108", det:"#e67e22", atm:"rgba(255, 100, 0, 0.15)", fColor:"#e67e22", atmoType:"Thin CO2", o2:"<0.1%", info:"Gravity is 3.7 m/s². The red planet is dusty and cold."},
-    {name:"Mercury 🌑", g:0.25, realVal:"3.7", speedVal:"Fast", jump:-13, speed: 9, sky:["#111111", "#222222", "#333333"], ground:"#4a4a4a", det:"#888888", atm:"rgba(100, 100, 100, 0.1)", fColor:"#bdc3c7", atmoType:"Trace", o2:"0%", info:"Gravity is 3.7 m/s². Scorched by the Sun."},
-    {name:"Jupiter 🟠", g:1.5, realVal:"24.7", speedVal:"Very Slow", jump:-30, speed: 5, sky:["#1a0f00", "#432818", "#5d4037"], ground:"#5e3a24", det:"#f39c12", atm:"rgba(243, 156, 18, 0.1)", fColor:"#f39c12", atmoType:"Thick H/He", o2:"0%", info:"Gravity is 24.7 m/s². Massive pressure makes movement difficult."},
-    {name:"Saturn 🪐", g:0.65, realVal:"10.4", speedVal:"Slow", jump:-16, speed: 7, sky:["#251b00", "#5d4037", "#a08e7a"], ground:"#7b6140", det:"#f1c40f", atm:"rgba(241, 196, 15, 0.1)", fColor:"#f1c40f", atmoType:"Thick H/He", o2:"0%", info:"Gravity is 10.4 m/s². Famous for its rings."},
-    {name:"Uranus 🧊", g:0.55, realVal:"8.7", speedVal:"Medium", jump:-15, speed: 7, sky:["#002030", "#004060", "#005f80"], ground:"#004060", det:"#a3e4d7", atm:"rgba(163, 228, 215, 0.1)", fColor:"#a3e4d7", atmoType:"Thick H/He/CH4", o2:"0%", info:"Gravity is 8.7 m/s². An icy, blue giant."},
-    {name:"Neptune 🔵", g:0.7, realVal:"11.15", speedVal:"Slow", jump:-18, speed: 6, sky:["#000022", "#000044", "#000066"], ground:"#002244", det:"#0077ff", atm:"rgba(0, 100, 255, 0.1)", fColor:"#0077ff", atmoType:"Thick H/He", o2:"0%", info:"Gravity is 11.15 m/s². The icy giant is freezing cold."},
-    {name:"Venus 🟡", g:0.55, realVal:"8.87", speedVal:"Medium", jump:-15, speed: 7, sky:["#3a1a00", "#723c1e", "#98522a"], ground:"#5e3a24", det:"#f39c12", atm:"rgba(255, 150, 0, 0.2)", fColor:"#f39c12", atmoType:"Very Thick CO2", o2:"0%", info:"Gravity is 8.87 m/s². A hellish landscape with high pressure."}
+    {name:"Jupiter 🟠", g:1.5, realVal:"24.7", speedVal:"Very Slow", jump:-30, speed: 5, sky:["#1a0f00", "#432818", "#5d4037"], ground:"#5e3a24", det:"#f39c12", atm:"rgba(243, 156, 18, 0.1)", fColor:"#f39c12", atmoType:"Thick H/He", o2:"0%", info:"Gravity is 24.7 m/s². Massive pressure makes movement difficult."}
 ];
 
 let planetIndex = 0;
 let gameState = "paused"; 
 let launchY = 0;
 let shake = 0;
-let stars = Array.from({length: 100}, () => ({x: Math.random(), y: Math.random(), size: Math.random() * 2}));
+let stars = Array.from({length: 80}, () => ({x: Math.random(), y: Math.random(), size: Math.random() * 2}));
 
-let player = { x:100, y:0, vy:0, onGround:true, lives: 3, magnetActive: false, magnetTimer: 0, facing: 1, walkFrame: 0, visible: true };
-let rocket = { x:canvas.width-250, y:0, fuel:0 };
+let player = { x:50, y:0, vy:0, onGround:true, lives: 3, magnetActive: false, magnetTimer: 0, facing: 1, walkFrame: 0, visible: true };
+let rocket = { x:0, y:0, fuel:0 };
 let fuelCans = []; let meteors = []; let magnets = []; let collected = 0;
 const keys = {};
 
-// Mobile Control Logic
-const setupTouch = (id, key) => {
-    const el = document.getElementById(id);
-    el.addEventListener('touchstart', (e) => { e.preventDefault(); keys[key] = true; });
-    el.addEventListener('touchend', (e) => { e.preventDefault(); keys[key] = false; });
-};
-setupTouch('leftBtn', 'ArrowLeft');
-setupTouch('rightBtn', 'ArrowRight');
-setupTouch('jumpBtn', 'Space');
+// --- TOUCH HANDLING ---
+function setupTouch() {
+    const bindBtn = (id, code) => {
+        const el = document.getElementById(id);
+        el.addEventListener('touchstart', (e) => { e.preventDefault(); keys[code] = true; initAudio(); });
+        el.addEventListener('touchend', (e) => { e.preventDefault(); keys[code] = false; });
+    };
+    bindBtn('btnLeft', 'ArrowLeft');
+    bindBtn('btnRight', 'ArrowRight');
+    bindBtn('btnJump', 'Space');
+}
 
 let startTime;
 let timeInterval;
 let planetTimes = [];
 
-function startTimer() {
-    startTime = Date.now();
-    timeInterval = setInterval(updateTimerDisplay, 1000);
-}
-
-function stopTimer() {
-    clearInterval(timeInterval);
-    return formatTime(Date.now() - startTime);
-}
-
-function updateTimerDisplay() {
-    document.getElementById("timer").innerText = formatTime(Date.now() - startTime);
-}
-
+function startTimer() { startTime = Date.now(); timeInterval = setInterval(updateTimerDisplay, 1000); }
+function stopTimer() { clearInterval(timeInterval); return formatTime(Date.now() - startTime); }
+function updateTimerDisplay() { document.getElementById("timer").innerText = formatTime(Date.now() - startTime); }
 function formatTime(ms) {
-    let totalSeconds = Math.floor(ms / 1000);
-    let minutes = Math.floor(totalSeconds / 60);
-    let seconds = totalSeconds % 60;
-    return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+    let s = Math.floor(ms / 1000);
+    return `${String(Math.floor(s/60)).padStart(2,'0')}:${String(s%60).padStart(2,'0')}`;
 }
 
 function updateUI() {
     const p = planets[planetIndex];
     document.getElementById("planetName").innerText = p.name;
-    document.getElementById("gravityVal").innerText = p.realVal;
     document.getElementById("fuelBar").style.width = (rocket.fuel / 3 * 100) + "%";
-    document.getElementById("magnetStatus").style.display = player.magnetActive ? "block" : "none";
+    document.getElementById("magnetStatus").style.display = player.magnetActive ? "inline" : "none";
     let heartStr = "";
     for(let i=0; i<player.lives; i++) heartStr += "❤️";
-    document.getElementById("hearts").innerText = heartStr || "NONE";
+    document.getElementById("hearts").innerText = heartStr || "💀";
 }
 
 function spawnFuel() {
-    let xPos = 100 + Math.random() * (canvas.width - 200);
-    let yPos = groundY() - 50 - Math.random() * 300;
-    fuelCans.push({ x: xPos, y: yPos, pulse: 0 }); 
+    fuelCans.push({ x: 100 + Math.random() * (canvas.width - 200), y: groundY - 50 - Math.random() * 250, pulse: 0 }); 
 }
-
-function spawnMeteor() { if(gameState === "playing") meteors.push({ x: Math.random() * canvas.width, y: -50, speed: 4 + Math.random() * 6 }); }
+function spawnMeteor() { if(gameState === "playing") meteors.push({ x: Math.random() * canvas.width, y: -50, speed: 3 + Math.random() * 5 }); }
 function spawnMagnet() { if(gameState === "playing") magnets.push({ x: Math.random() * (canvas.width - 100), y: -50, speed: 2 }); }
 
 function loadLevel() {
     let p = planets[planetIndex];
-    document.getElementById("infoTitle").innerText = `Welcome to ${p.name}`;
+    document.getElementById("infoTitle").innerText = p.name;
     document.getElementById("infoText").innerText = p.info;
     document.getElementById("infoPanel").style.display = "block";
-    
     fuelCans = []; meteors = []; magnets = [];
     for(let i=0; i<3; i++) spawnFuel();
-    spawnMagnet();
-    rocket.x = canvas.width - (canvas.width < 800 ? 150 : 250);
-    rocket.y = groundY() - 140;
-    player.y = groundY();
     updateUI();
 }
 
-window.closeInfo = function() {
-    document.getElementById("infoPanel").style.display = "none";
-    gameState = "playing";
-    startTimer();
-}
+window.closeInfo = function() { document.getElementById("infoPanel").style.display = "none"; gameState = "playing"; startTimer(); }
 
-setInterval(spawnMeteor, 2000);
-setInterval(spawnMagnet, 10000);
-
+resize();
+setupTouch();
+setInterval(spawnMeteor, 2500);
+setInterval(spawnMagnet, 12000);
 document.addEventListener("keydown", e => keys[e.code] = true);
 document.addEventListener("keyup", e => keys[e.code] = false);
 
 function drawEnvironment() {
     let p = planets[planetIndex];
     let skyGrad = ctx.createLinearGradient(0, 0, 0, canvas.height);
-    skyGrad.addColorStop(0, p.sky[0]); skyGrad.addColorStop(0.5, p.sky[1]); skyGrad.addColorStop(1, p.sky[2]);
+    skyGrad.addColorStop(0, p.sky[0]); skyGrad.addColorStop(1, p.sky[2]);
     ctx.fillStyle = skyGrad; ctx.fillRect(0, 0, canvas.width, canvas.height);
     ctx.fillStyle = "white";
-    stars.forEach(s => { ctx.globalAlpha = 0.5 + Math.sin(Date.now()/1000 + s.x)*0.5; ctx.fillRect(s.x * canvas.width, s.y * canvas.height, s.size, s.size); });
+    stars.forEach(s => { ctx.globalAlpha = 0.4; ctx.fillRect(s.x * canvas.width, s.y * canvas.height, s.size, s.size); });
     ctx.globalAlpha = 1;
-    let glow = ctx.createLinearGradient(0, groundY() - 300, 0, groundY());
-    glow.addColorStop(0, "transparent"); glow.addColorStop(1, p.atm);
-    ctx.fillStyle = glow; ctx.fillRect(0, groundY() - 300, canvas.width, 300);
-    ctx.fillStyle = p.ground; ctx.fillRect(0, groundY(), canvas.width, 100);
-    ctx.fillStyle = p.det; ctx.globalAlpha = 0.3;
-    for(let i=0; i<20; i++) { ctx.beginPath(); ctx.ellipse((i * 137) % canvas.width, groundY() + 20 + (i%30), 40, 10, 0, 0, Math.PI*2); ctx.fill(); }
-    ctx.globalAlpha = 1;
+    ctx.fillStyle = p.ground; ctx.fillRect(0, groundY, canvas.width, 100);
 }
 
 function drawFuelTank(x, y, pulse, color) {
     ctx.save(); ctx.translate(x, y);
-    ctx.shadowBlur = 15 + Math.sin(pulse)*5; ctx.shadowColor = color;
-    ctx.fillStyle = "#f1f2f6"; ctx.strokeStyle = "#2f3542"; ctx.lineWidth = 2;
-    ctx.beginPath(); ctx.roundRect(-10, -20, 20, 40, 5); ctx.fill(); ctx.stroke();
-    ctx.fillStyle = color; ctx.beginPath(); ctx.roundRect(-7, -10 + Math.sin(pulse)*2, 14, 25, 3); ctx.fill();
-    ctx.fillStyle = "#2f3542"; ctx.fillRect(-5, -25, 10, 5); ctx.restore();
+    ctx.fillStyle = "#f1f2f6"; ctx.beginPath(); ctx.roundRect(-8, -15, 16, 30, 4); ctx.fill();
+    ctx.fillStyle = color; ctx.fillRect(-5, -5 + Math.sin(pulse)*2, 10, 15);
+    ctx.restore();
 }
 
 function drawRocket(x, y, fuel, isLaunching) {
     ctx.save();
     let hover = isLaunching ? 0 : Math.sin(Date.now() / 300) * 5;
     ctx.translate(x + 35, y + 60 + hover - launchY); 
-    ctx.fillStyle = "#ff4757"; ctx.beginPath(); ctx.moveTo(-35, 20); ctx.lineTo(-50, 55); ctx.lineTo(-15, 45); ctx.fill(); ctx.moveTo(35, 20); ctx.lineTo(50, 55); ctx.lineTo(15, 45); ctx.fill();
-    ctx.fillStyle = "#f1f2f6"; ctx.strokeStyle = "#2f3542"; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(-30, 45); ctx.quadraticCurveTo(-35, -20, 0, -80); ctx.quadraticCurveTo(35, -20, 30, 45); ctx.closePath(); ctx.fill(); ctx.stroke();
-    ctx.fillStyle = "#70a1ff"; ctx.beginPath(); ctx.arc(0, -15, 12, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
-    ctx.fillStyle = "white"; ctx.globalAlpha = 0.5; ctx.beginPath(); ctx.arc(-4, -18, 5, 0, Math.PI*2); ctx.fill(); ctx.globalAlpha = 1;
+    ctx.fillStyle = "#ff4757"; ctx.beginPath(); ctx.moveTo(-30, 20); ctx.lineTo(-45, 50); ctx.lineTo(-15, 40); ctx.fill();
+    ctx.moveTo(30, 20); ctx.lineTo(45, 50); ctx.lineTo(15, 40); ctx.fill();
+    ctx.fillStyle = "#f1f2f6"; ctx.beginPath(); ctx.moveTo(-25, 40); ctx.quadraticCurveTo(-30, -20, 0, -70); ctx.quadraticCurveTo(30, -20, 25, 40); ctx.fill();
     if (fuel > 0 || isLaunching) {
-        let size = isLaunching ? 50 : 10; let flicker = Math.sin(Date.now() / 50) * size;
-        ctx.fillStyle = "#ffa502"; ctx.beginPath(); ctx.moveTo(-15, 45); ctx.lineTo(0, 90 + flicker + (isLaunching?70:0)); ctx.lineTo(15, 45); ctx.fill();
-        ctx.fillStyle = "#ff7f50"; ctx.beginPath(); ctx.moveTo(-8, 45); ctx.lineTo(0, 65 + flicker + (isLaunching?40:0)); ctx.lineTo(8, 45); ctx.fill();
+        ctx.fillStyle = "#ffa502"; ctx.beginPath(); ctx.moveTo(-10, 40); ctx.lineTo(0, 70 + (isLaunching?50:0)); ctx.lineTo(10, 40); ctx.fill();
     }
     ctx.restore();
 }
 
-function drawAstronaut(x, y, scale, facing, frame) {
+function drawAstronaut(x, y, facing) {
     if (!player.visible) return;
-    ctx.save(); ctx.translate(x, y); ctx.scale(scale * facing, scale);
-    ctx.fillStyle = "#ecf0f1"; ctx.strokeStyle = "#2f3542"; ctx.lineWidth = 2;
-    ctx.beginPath(); ctx.moveTo(-12, -25); ctx.lineTo(12, -25); ctx.lineTo(15, 0); ctx.lineTo(-15, 0); ctx.closePath(); ctx.fill(); ctx.stroke();
-    ctx.fillStyle = "white"; ctx.beginPath(); ctx.arc(0, -32, 16, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
-    ctx.fillStyle = "#2f3542"; ctx.beginPath(); ctx.ellipse(6, -32, 11, 8, 0, 0, Math.PI * 2); ctx.fill(); ctx.restore();
+    ctx.save(); ctx.translate(x, y); ctx.scale(facing, 1);
+    ctx.fillStyle = "white"; ctx.beginPath(); ctx.arc(0, -30, 14, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = "#2f3542"; ctx.beginPath(); ctx.ellipse(5, -30, 10, 7, 0, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = "#ecf0f1"; ctx.fillRect(-10, -18, 20, 18);
+    ctx.restore();
 }
 
 function update() {
@@ -432,106 +320,93 @@ function update() {
     if(gameState !== "playing") return;
 
     const p = planets[planetIndex];
-    let isMoving = false;
-    if(keys["ArrowRight"]) { player.x += p.speed; player.facing = 1; isMoving = true; }
-    if(keys["ArrowLeft"]) { player.x -= p.speed; player.facing = -1; isMoving = true; }
+    if(keys["ArrowRight"]) { player.x += p.speed; player.facing = 1; }
+    if(keys["ArrowLeft"]) { player.x -= p.speed; player.facing = -1; }
     if(keys["Space"] && player.onGround) { player.vy = p.jump; player.onGround = false; }
+    
     player.vy += p.g; player.y += player.vy;
-    if(player.y >= groundY()) { player.y = groundY(); player.vy = 0; player.onGround = true; }
-    player.x = Math.max(20, Math.min(canvas.width - 20, player.x));
-    if(isMoving && player.onGround) player.walkFrame += 0.2;
+    if(player.y >= groundY) { player.y = groundY; player.vy = 0; player.onGround = true; }
+    player.x = Math.max(15, Math.min(canvas.width - 15, player.x));
+
     if(player.magnetActive) { player.magnetTimer--; if(player.magnetTimer <= 0) player.magnetActive = false; }
-    magnets.forEach((mag, i) => {
-        mag.y += mag.speed;
-        if(Math.hypot(player.x - mag.x, (player.y-30) - mag.y) < 50) { magnets.splice(i, 1); player.magnetActive = true; player.magnetTimer = 600; playSound('magnet'); updateUI(); }
-    });
     
     fuelCans.forEach((f, i) => {
         f.pulse += 0.1;
-        let dist = Math.hypot(player.x - f.x, (player.y-30) - f.y);
-        if(player.magnetActive && dist < 350) { f.x += (player.x - f.x) * 0.12; f.y += ((player.y-30) - f.y) * 0.12; }
-        if(dist < 50) { fuelCans.splice(i, 1); collected++; playSound('fuel'); updateUI(); }
+        let dist = Math.hypot(player.x - f.x, (player.y-20) - f.y);
+        if(player.magnetActive && dist < 250) { f.x += (player.x - f.x) * 0.1; f.y += ((player.y-20) - f.y) * 0.1; }
+        if(dist < 40) { fuelCans.splice(i, 1); collected++; playSound('fuel'); updateUI(); }
     });
     
-    if(Math.hypot(player.x - (rocket.x+35), (player.y-30) - (rocket.y+60)) < 85 && collected > 0) {
+    if(Math.hypot(player.x - (rocket.x+35), (player.y-20) - (rocket.y+60)) < 70 && collected > 0) {
         rocket.fuel += collected; collected = 0; updateUI();
-        if(rocket.fuel >= 3) { 
-            let time = stopTimer();
-            planetTimes.push({name: planets[planetIndex].name, time: time});
-            gameState = "boarding"; 
-        }
+        if(rocket.fuel >= 3) { planetTimes.push({name: p.name, time: stopTimer()}); gameState = "boarding"; }
     }
+
     meteors.forEach((m, i) => {
         m.y += m.speed;
-        if(Math.hypot(player.x - m.x, (player.y-30) - m.y) < 40) { meteors.splice(i, 1); player.lives--; playSound('damage'); updateUI(); }
+        if(Math.hypot(player.x - m.x, (player.y-20) - m.y) < 30) { meteors.splice(i, 1); player.lives--; playSound('damage'); updateUI(); }
+    });
+
+    magnets.forEach((mag, i) => {
+        mag.y += mag.speed;
+        if(Math.hypot(player.x - mag.x, (player.y-20) - mag.y) < 40) { magnets.splice(i, 1); player.magnetActive = true; player.magnetTimer = 600; playSound('magnet'); updateUI(); }
     });
 }
 
-function boardingSequence() {
-    if(gameState !== "boarding") return;
-    let targetX = rocket.x + 35;
-    if (Math.abs(player.x - targetX) > 5) { player.x += (player.x < targetX) ? 3 : -3; player.facing = (player.x < targetX) ? 1 : -1; player.walkFrame += 0.2; }
-    else { 
-        player.visible = false; 
-        if(launchY === 0) playSound('launch');
-        setTimeout(() => { gameState = "launching"; }, 600); 
+function loop() {
+    update();
+    if(gameState === "boarding") {
+        let tx = rocket.x + 35;
+        if(Math.abs(player.x - tx) > 5) player.x += (player.x < tx ? 2 : -2);
+        else { player.visible = false; playSound('launch'); gameState = "launching"; }
     }
-}
-
-function launchSequence() {
-    if(gameState !== "launching") return;
-    shake = Math.min(shake + 0.4, 15); launchY += 8;
-    if (launchY > canvas.height + 400) { 
-        if(planetIndex === planets.length - 1) {
-            showSummary();
-            gameState = "finished";
-        } else {
-            document.getElementById("message").style.display = "block";
+    if(gameState === "launching") {
+        launchY += 7; shake = 5;
+        if(launchY > canvas.height + 200) {
+            if(planetIndex === planets.length-1) showSummary();
+            else document.getElementById("message").style.display = "block";
             gameState = "finished";
         }
     }
+    
+    ctx.save();
+    if(shake > 0) { ctx.translate(Math.random()*shake, Math.random()*shake); shake *= 0.9; }
+    drawEnvironment();
+    if(player.magnetActive && player.visible) {
+        ctx.strokeStyle = "cyan"; ctx.lineWidth = 1; ctx.beginPath();
+        ctx.arc(player.x, player.y-20, 60 + Math.sin(Date.now()/100)*5, 0, Math.PI*2); ctx.stroke();
+    }
+    drawAstronaut(player.x, player.y, player.facing);
+    drawRocket(rocket.x, rocket.y, rocket.fuel, gameState === "launching");
+    fuelCans.forEach(f => drawFuelTank(f.x, f.y, f.pulse, planets[planetIndex].fColor));
+    meteors.forEach(m => { ctx.fillStyle = "#555"; ctx.beginPath(); ctx.arc(m.x, m.y, 15, 0, Math.PI*2); ctx.fill(); });
+    magnets.forEach(m => { ctx.fillStyle = "#ff4757"; ctx.font = "20px Arial"; ctx.fillText("🧲", m.x-10, m.y); });
+    ctx.restore();
+    requestAnimationFrame(loop);
 }
 
 function showSummary() {
     let table = document.getElementById("summaryTable");
     planetTimes.forEach(p => {
-        let planetData = planets.find(pl => pl.name === p.name);
-        let row = table.insertRow();
-        row.insertCell(0).innerText = p.name;
-        row.insertCell(1).innerText = p.time;
-        row.insertCell(2).innerText = planetData.realVal;
-        row.insertCell(3).innerText = planetData.speedVal;
-        row.insertCell(4).innerText = planetData.atmoType;
-        row.insertCell(5).innerText = planetData.o2;
+        let d = planets.find(pl => pl.name === p.name);
+        let r = table.insertRow();
+        r.insertCell(0).innerText = p.name;
+        r.insertCell(1).innerText = p.time;
+        r.insertCell(2).innerText = d.realVal;
+        r.insertCell(3).innerText = d.atmoType;
     });
     document.getElementById("summaryPanel").style.display = "block";
 }
 
-function draw() {
-    ctx.save();
-    if(shake > 0) ctx.translate(Math.random()*shake - shake/2, Math.random()*shake - shake/2);
-    drawEnvironment();
-    if(player.magnetActive && player.visible) { ctx.strokeStyle = "rgba(0, 210, 255, 0.4)"; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(player.x, player.y - 30, 80 + Math.sin(Date.now()/100)*5, 0, Math.PI*2); ctx.stroke(); }
-    drawAstronaut(player.x, player.y, 1, player.facing, player.walkFrame);
-    drawRocket(rocket.x, rocket.y, rocket.fuel, gameState === "launching");
-    fuelCans.forEach(f => { drawFuelTank(f.x, f.y, f.pulse, planets[planetIndex].fColor); });
-    magnets.forEach(mag => { ctx.save(); ctx.translate(mag.x, mag.y); ctx.lineWidth = 8; ctx.strokeStyle = "#ff4757"; ctx.beginPath(); ctx.arc(0, 0, 15, Math.PI, 0); ctx.stroke(); ctx.strokeStyle = "#ecf0f1"; ctx.beginPath(); ctx.moveTo(-15, 0); ctx.lineTo(-15, 10); ctx.moveTo(15, 0); ctx.lineTo(15, 10); ctx.stroke(); ctx.restore(); });
-    meteors.forEach(m => { ctx.fillStyle = "#3d3d3d"; ctx.beginPath(); ctx.arc(m.x, m.y, 20, 0, Math.PI*2); ctx.fill(); ctx.fillStyle = "#222"; ctx.beginPath(); ctx.arc(m.x-5, m.y-5, 5, 0, Math.PI*2); ctx.fill(); });
-    ctx.restore();
-    if(shake > 0 && gameState !== "launching") shake *= 0.9;
-}
-
 function nextLevel() {
     planetIndex = (planetIndex + 1) % planets.length;
-    rocket.fuel = 0; launchY = 0; shake = 0;
-    player.visible = true; player.x = 100; player.lives = 3; player.magnetActive = false;
+    rocket.fuel = 0; launchY = 0; player.visible = true; player.x = 50;
     document.getElementById("message").style.display = "none";
     loadLevel();
 }
 
-function gameLoop() { update(); boardingSequence(); launchSequence(); draw(); requestAnimationFrame(gameLoop); }
 loadLevel();
-gameLoop();
+loop();
 </script>
 </body>
 </html>
